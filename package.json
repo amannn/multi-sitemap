@@ -1,0 +1,42 @@
+{
+  "name": "multi-sitemap",
+  "version": "0.1.0",
+  "description": "Painless creation of large dynamic sitemaps that consist of multiple files.",
+  "author": "Jan Amann <jan@amann.me>",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "lint": "tslint src/**/*.ts",
+    "prepublish": "yarn run build",
+    "build": "yarn run test && rm -rf ./dist && tsc",
+    "test": "jest"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|js)$": "<rootDir>/scripts/jestPreprocessor.js"
+    },
+    "testMatch": [
+      "<rootDir>/src/__tests__/*.(ts|js)"
+    ]
+  },
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "mkdirp": "0.5.1"
+  },
+  "devDependencies": {
+    "@types/jest": "21.1.9",
+    "@types/mkdirp": "0.5.2",
+    "@types/node": "8.5.2",
+    "jest": "22.0.4",
+    "prettier": "1.9.2",
+    "tslint": "5.8.0",
+    "tslint-config-prettier": "1.6.0",
+    "typescript": "2.6.2"
+  }
+}
