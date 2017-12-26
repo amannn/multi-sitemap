@@ -51,9 +51,11 @@ export default class SitemapProcessor {
         if (stream) await stream.add(entries);
       }
 
-      if (stream) await stream.end();
+      if (stream) {
+        await stream.end();
+        this.sitemaps.push(stream.name);
+      }
       resolve();
-      this.sitemaps.push(name);
     });
   }
 

@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import SitemapWriterFile from './SitemapWriterFile';
 import {ISitemapWriterStream} from './types';
 

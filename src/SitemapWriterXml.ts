@@ -1,4 +1,4 @@
-import path from 'path';
+import * as path from 'path';
 import SitemapWriterFile from './SitemapWriterFile';
 import {ISitemapEntry, ISitemapWriterStream} from './types';
 
@@ -11,12 +11,12 @@ export default class SitemapWriterXml extends SitemapWriterFile {
     const filename = path.join(this.directory, `${name}.xml`);
     this.fileStreamWriter.open(filename);
 
+    await this.fileStreamWriter.write('<?xml version="1.0" encoding="UTF-8"?>');
+    await this.fileStreamWriter.write('\n');
     await this.fileStreamWriter.write(
-      [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-      ].join('')
+      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     );
+    await this.fileStreamWriter.write('\n');
 
     return {
       name,

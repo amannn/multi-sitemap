@@ -1,8 +1,8 @@
-import fs, {WriteStream} from 'fs';
+import * as fs from 'fs';
 import {IFileStreamWriter} from './types';
 
 export default class FileStreamWriter implements IFileStreamWriter {
-  private stream: WriteStream | null;
+  private stream: fs.WriteStream | null;
 
   public open(filename: string) {
     if (this.stream) throw new Error('Only one stream may be open at a time.');

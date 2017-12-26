@@ -3,7 +3,7 @@
       "allowSyntheticDefaultImports": true,
       "declaration": true,
       "lib": ["es2015", "es2016", "es2017"],
-      "module":"CommonJS",
+      "module": "CommonJS",
       "moduleResolution": "node",
       "noUnusedLocals": true,
       "noUnusedParameters": true,

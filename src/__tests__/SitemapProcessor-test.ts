@@ -30,7 +30,7 @@ it('can handle a mix of static and dynamic sitemaps', async () => {
       {url: './products-1'},
       {url: './products-2'},
       {url: './products-3'},
-      {url: './products'}
+      {url: './products-4'}
     ],
     pages: ['/', '/about'],
     'products-1': ['/products/0', '/products/1'],

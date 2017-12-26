@@ -1,14 +1,10 @@
 jest.mock('mkdirp', () => ({
-  default: {
-    sync() {}
-  }
+  sync() {}
 }));
 
 jest.mock('path', () => ({
-  default: {
-    join(...parts: string[]) {
-      return parts.join('');
-    }
+  join(...parts: string[]) {
+    return parts.join('');
   }
 }));
 
@@ -21,23 +17,17 @@ it('writes a list of URLs', async () => {
     directory: './tmp',
     fileStreamWriter
   });
-  let stream = await writer.createStream('first');
+  let stream = await writer.createStream('/first');
   await stream.add(['/', '/foo']);
   await stream.add(['/bar']);
   await stream.end();
 
-  stream = await writer.createStream('second');
+  stream = await writer.createStream('/second');
   await stream.add(['/foobar']);
   await stream.end();
 
-  expect(fileStreamWriter.chunks).toEqual([
-    '/',
-    '\n',
-    '/foo',
-    '\n',
-    '/bar',
-    '\n',
-    '/foobar',
-    '\n'
-  ]);
+  expect(fileStreamWriter.chunksByName).toEqual({
+    './tmp/first.txt': ['/', '\n', '/foo', '\n', '/bar', '\n'],
+    './tmp/second.txt': ['/foobar', '\n']
+  });
 });

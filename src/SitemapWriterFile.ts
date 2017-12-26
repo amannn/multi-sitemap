@@ -1,4 +1,4 @@
-import mkdirp from 'mkdirp';
+import * as mkdirp from 'mkdirp';
 import FileStreamWriter from './FileStreamWriter';
 import {IFileStreamWriter, ISitemapWriter, ISitemapWriterStream} from './types';
 
