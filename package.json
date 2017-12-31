@@ -1,6 +1,6 @@
 {
   "name": "multi-sitemap",
-  "version": "0.2.0-3",
+  "version": "0.2.0",
   "description": "Painless creation of large dynamic sitemaps that consist of multiple files.",
   "author": "Jan Amann <jan@amann.me>",
   "main": "dist/index.js",
