@@ -31,10 +31,14 @@ export default class SitemapProcessor {
       while (reader.hasNext()) {
         const entries = await reader.getNext();
 
+        if (entries.length > this.maxEntriesPerFile) {
+          throw new Error(
+            "The reader shouldn't return more entries than a single sitemap should contain."
+          );
+        }
+
         if (curStreamedEntries + entries.length > this.maxEntriesPerFile) {
-          if (!stream) {
-            throw new Error('No opened stream.');
-          }
+          if (!stream) throw new Error('No opened stream.');
           await stream.end();
           this.sitemaps.push(stream.name);
           stream = null;

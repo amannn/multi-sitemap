@@ -34,7 +34,7 @@ import {SitemapProcessor, SitemapWriterXml} from 'multi-sitemap';
 
  ```
 
-All methods of `SitemapProcessor` return promises that should be waited for before calling other methods.
+All methods of `SitemapProcessor` return promises that should be waited for before calling other methods. The `addIndex` method should be called last, as this is the time the processor knows about all child sitemaps.
 
 ## Adding dynamic data
 
@@ -48,7 +48,7 @@ interface ISitemapReader {
 
 // Given the following types:
 
-type SitemapEntryConfig = /* url*/ string | ISitemapEntry;
+type SitemapEntryConfig = /* url */ string | ISitemapEntry;
 
 interface ISitemapEntry {
   url: string;

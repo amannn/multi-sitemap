@@ -15,7 +15,7 @@ it('can handle a mix of static and dynamic sitemaps', async () => {
 
   const addDynamicResult = processor.addDynamic({
     name: 'products',
-    reader: new SitemapReaderMock()
+    reader: new SitemapReaderMock({entriesPerChunk: 1})
   });
   expect(addDynamicResult).toBeInstanceOf(Promise);
   await addDynamicResult;
