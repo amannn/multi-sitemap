@@ -4,7 +4,12 @@ import SitemapWriterMock from './mocks/SitemapWriterMock';
 
 it('can handle a mix of static and dynamic sitemaps', async () => {
   const writer = new SitemapWriterMock();
-  const processor = new SitemapProcessor({writer, maxEntriesPerFile: 2});
+  const processor = new SitemapProcessor({
+    publicHost: 'https://domain.tld',
+    maxEntriesPerFile: 2,
+    publicDirectory: '/sitemap',
+    writer
+  });
 
   const addStaticResult = processor.addStatic({
     name: 'pages',
@@ -26,16 +31,25 @@ it('can handle a mix of static and dynamic sitemaps', async () => {
 
   expect(writer.streams).toEqual({
     index: [
-      {url: './pages'},
-      {url: './products-1'},
-      {url: './products-2'},
-      {url: './products-3'},
-      {url: './products-4'}
+      {url: 'https://domain.tld/sitemap/pages'},
+      {url: 'https://domain.tld/sitemap/products-1'},
+      {url: 'https://domain.tld/sitemap/products-2'},
+      {url: 'https://domain.tld/sitemap/products-3'},
+      {url: 'https://domain.tld/sitemap/products-4'}
     ],
-    pages: ['/', '/about'],
-    'products-1': ['/products/0', '/products/1'],
-    'products-2': ['/products/2', '/products/3'],
-    'products-3': ['/products/4', '/products/5'],
-    'products-4': ['/products/6']
+    pages: ['https://domain.tld/', 'https://domain.tld/about'],
+    'products-1': [
+      'https://domain.tld/products/0',
+      'https://domain.tld/products/1'
+    ],
+    'products-2': [
+      'https://domain.tld/products/2',
+      'https://domain.tld/products/3'
+    ],
+    'products-3': [
+      'https://domain.tld/products/4',
+      'https://domain.tld/products/5'
+    ],
+    'products-4': ['https://domain.tld/products/6']
   });
 });

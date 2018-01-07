@@ -5,7 +5,7 @@ Painless creation of large dynamic sitemaps that consist of multiple files.
 ## Features
  - Supports generating sitemaps from **dynamic data**: e.g. generating a sitemap for all entities in a paginated REST endpoint.
  - Automatically splits sitemaps into **chunks of 50k** entries to comply to the [Google guidelines](https://support.google.com/webmasters/answer/183668#sitemapformat).
- - Pluggable writers: Use `SitemapWriterXml`, `SitemapWriterTxt` or build your own.
+ - Pluggable writers: Use `SitemapWriterXml`, `SitemapWriterTxt` or build your own (e.g. create a sitemap at a remote static file host).
  - Utilizes **streams**, so large amounts of data can be processed without memory issues.
  - Built with **TypeScript** so consumers can take advantage of types.
 
@@ -15,8 +15,18 @@ Painless creation of large dynamic sitemaps that consist of multiple files.
 import {SitemapProcessor, SitemapWriterXml} from 'multi-sitemap';
 
 (async () => {
-  const writer = new SitemapWriterXml({directory: './static/sitemap'});
-  const processor = new SitemapProcessor({writer});
+  const processor = new SitemapProcessor({
+    // The domain where the sitemap is hosted. A sitemap is
+    // required to include a full URL including the host.
+    publicHost: 'https://domain.tld',
+
+    // The public path on the host where the sitemap can be
+    // found. This will be concatenated with `publicHost`.
+    publicDirectory: '/sitemap',
+
+    // One of the pluggable writers.
+    writer: new SitemapWriterXml({directory: './static/sitemap'});
+  });
 
   await processor.addStatic({
     name: 'pages',
@@ -30,9 +40,7 @@ import {SitemapProcessor, SitemapWriterXml} from 'multi-sitemap';
 
   await processor.addIndex();
 })();
-
-
- ```
+```
 
 All methods of `SitemapProcessor` return promises that should be waited for before calling other methods. The `addIndex` method should be called last, as this is the time the processor knows about all child sitemaps.
 

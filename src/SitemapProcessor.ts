@@ -6,19 +6,39 @@ import {
 } from './types';
 
 export default class SitemapProcessor {
-  private writer: ISitemapWriter;
-  private sitemaps: string[] = [];
+  private publicHost: string;
   private maxEntriesPerFile: number;
+  private publicDirectory: string;
+  private sitemaps: string[] = [];
+  private writer: ISitemapWriter;
 
   constructor({
-    writer,
-    maxEntriesPerFile = 50000
+    publicHost,
+    maxEntriesPerFile = 50000,
+    publicDirectory,
+    writer
   }: {
-    writer: ISitemapWriter;
+    publicHost: string;
     maxEntriesPerFile?: number;
+    publicDirectory: string;
+    writer: ISitemapWriter;
   }) {
-    this.writer = writer;
+    // Normalize `publicHost`
+    if (publicHost.endsWith('/')) {
+      publicHost = publicHost.slice(0, publicHost.length - 1);
+    }
+    if (!publicHost.startsWith('http')) publicHost = `http://${publicHost}`;
+    this.publicHost = publicHost;
+
     this.maxEntriesPerFile = maxEntriesPerFile;
+
+    // Normalize `publicDirectory`
+    if (publicDirectory.endsWith('/')) {
+      publicDirectory = publicDirectory.slice(0, publicDirectory.length - 1);
+    }
+    this.publicDirectory = publicDirectory;
+
+    this.writer = writer;
   }
 
   public addDynamic({name, reader}: {name: string; reader: ISitemapReader}) {
@@ -52,7 +72,7 @@ export default class SitemapProcessor {
         }
 
         curStreamedEntries += entries.length;
-        if (stream) await stream.add(entries);
+        if (stream) await stream.add(this.mapEntriesToFullUrls(entries));
       }
 
       if (stream) {
@@ -71,15 +91,32 @@ export default class SitemapProcessor {
     entries: SitemapEntryConfig[];
   }) {
     const stream = await this.writer.createStream(name);
-    await stream.add(entries);
+    await stream.add(this.mapEntriesToFullUrls(entries));
     await stream.end();
     this.sitemaps.push(name);
   }
 
   public async addIndex() {
     const stream = await this.writer.createStream('index');
-    const entries = this.sitemaps.map(url => ({url: `./${url}`}));
-    await stream.add(entries);
+    const entries = this.sitemaps.map(name => ({
+      url: `${this.publicDirectory}/${name}`
+    }));
+    await stream.add(this.mapEntriesToFullUrls(entries));
     await stream.end();
+  }
+
+  private mapEntriesToFullUrls(entries: SitemapEntryConfig[]) {
+    return entries.map(entryConfig => {
+      let url = typeof entryConfig === 'string' ? entryConfig : entryConfig.url;
+      if (!url.startsWith('http')) {
+        if (!url.startsWith('/')) url = '/' + url;
+        url = this.publicHost + url;
+      }
+      if (typeof entryConfig === 'string') {
+        return url;
+      } else {
+        return {...entryConfig, url};
+      }
+    });
   }
 }
