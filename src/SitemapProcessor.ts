@@ -9,7 +9,7 @@ export default class SitemapProcessor {
   private publicHost: string;
   private maxEntriesPerFile: number;
   private publicDirectory: string;
-  private sitemaps: string[] = [];
+  private sitemapFilenames: string[] = [];
   private writer: ISitemapWriter;
 
   constructor({
@@ -60,7 +60,7 @@ export default class SitemapProcessor {
         if (curStreamedEntries + entries.length > this.maxEntriesPerFile) {
           if (!stream) throw new Error('No opened stream.');
           await stream.end();
-          this.sitemaps.push(stream.name);
+          this.sitemapFilenames.push(stream.filename);
           stream = null;
         }
 
@@ -77,7 +77,7 @@ export default class SitemapProcessor {
 
       if (stream) {
         await stream.end();
-        this.sitemaps.push(stream.name);
+        this.sitemapFilenames.push(stream.filename);
       }
       resolve();
     });
@@ -93,13 +93,13 @@ export default class SitemapProcessor {
     const stream = await this.writer.createStream(name);
     await stream.add(this.mapEntriesToFullUrls(entries));
     await stream.end();
-    this.sitemaps.push(name);
+    this.sitemapFilenames.push(stream.filename);
   }
 
   public async addIndex() {
     const stream = await this.writer.createStream('index');
-    const entries = this.sitemaps.map(name => ({
-      url: `${this.publicDirectory}/${name}`
+    const entries = this.sitemapFilenames.map(filename => ({
+      url: `${this.publicDirectory}/${filename}`
     }));
     await stream.add(this.mapEntriesToFullUrls(entries));
     await stream.end();

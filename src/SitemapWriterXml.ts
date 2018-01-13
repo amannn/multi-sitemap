@@ -8,8 +8,9 @@ function formatLastModified(date = new Date()) {
 
 export default class SitemapWriterXml extends SitemapWriterFile {
   public async createStream(name: string): Promise<ISitemapWriterStream> {
-    const filename = path.join(this.directory, `${name}.xml`);
-    this.fileStreamWriter.open(filename);
+    const filename = name + '.xml';
+    const sitemapPath = path.join(this.directory, filename);
+    this.fileStreamWriter.open(sitemapPath);
 
     await this.fileStreamWriter.write('<?xml version="1.0" encoding="UTF-8"?>');
     await this.fileStreamWriter.write('\n');
@@ -20,6 +21,7 @@ export default class SitemapWriterXml extends SitemapWriterFile {
 
     return {
       name,
+      filename,
 
       add: async entries => {
         for (const entryOrUrl of entries) {

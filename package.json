@@ -2,6 +2,7 @@
   "name": "multi-sitemap",
   "version": "0.3.0",
   "description": "Painless creation of large dynamic sitemaps that consist of multiple files.",
+  "repository": "https://github.com/amannn/multi-sitemap",
   "author": "Jan Amann <jan@amann.me>",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

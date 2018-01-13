@@ -26,6 +26,7 @@ export type SitemapEntryConfig = string | ISitemapEntry;
 
 export interface ISitemapWriterStream {
   name: string;
+  filename: string;
   add(entries: SitemapEntryConfig[]): Promise<void>;
   end(): Promise<void>;
   [others: string]: any;

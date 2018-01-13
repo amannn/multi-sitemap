@@ -11,6 +11,7 @@ export default class SitemapWriterMock implements ISitemapWriter {
     const stream: ISitemapWriterStream = {
       entries: [],
       name,
+      filename: `${name}.xml`,
 
       add: (entries: SitemapEntryConfig[]) => {
         this.streams[name].push(...entries);

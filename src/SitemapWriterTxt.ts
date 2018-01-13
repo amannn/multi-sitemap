@@ -4,11 +4,13 @@ import {ISitemapWriterStream} from './types';
 
 export default class SitemapWriterTxt extends SitemapWriterFile {
   public createStream(name: string): Promise<ISitemapWriterStream> {
-    const filename = path.join(this.directory, `${name}.txt`);
-    this.fileStreamWriter.open(filename);
+    const filename = name + '.txt';
+    const sitemapPath = path.join(this.directory, filename);
+    this.fileStreamWriter.open(sitemapPath);
 
     const writerStream: ISitemapWriterStream = {
       name,
+      filename,
 
       add: async entries => {
         for (const entryOrUrl of entries) {

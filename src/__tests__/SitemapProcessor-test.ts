@@ -31,11 +31,11 @@ it('can handle a mix of static and dynamic sitemaps', async () => {
 
   expect(writer.streams).toEqual({
     index: [
-      {url: 'https://domain.tld/sitemap/pages'},
-      {url: 'https://domain.tld/sitemap/products-1'},
-      {url: 'https://domain.tld/sitemap/products-2'},
-      {url: 'https://domain.tld/sitemap/products-3'},
-      {url: 'https://domain.tld/sitemap/products-4'}
+      {url: 'https://domain.tld/sitemap/pages.xml'},
+      {url: 'https://domain.tld/sitemap/products-1.xml'},
+      {url: 'https://domain.tld/sitemap/products-2.xml'},
+      {url: 'https://domain.tld/sitemap/products-3.xml'},
+      {url: 'https://domain.tld/sitemap/products-4.xml'}
     ],
     pages: ['https://domain.tld/', 'https://domain.tld/about'],
     'products-1': [
