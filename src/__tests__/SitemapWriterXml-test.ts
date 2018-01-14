@@ -19,7 +19,7 @@ it('builds a valid XML file', async () => {
   });
   let stream = await writer.createStream('/first');
   await stream.add(['/', '/foo']);
-  await stream.add([{url: '/bar', lastModified: new Date(2017, 12, 26)}]);
+  await stream.add([{url: '/bar', lastModified: new Date(2018, 0, 14)}]);
   await stream.end();
 
   stream = await writer.createStream('/second');
@@ -36,7 +36,7 @@ it('builds a valid XML file', async () => {
       '\n',
       '<url><loc>/foo</loc></url>',
       '\n',
-      '<url><loc>/bar</loc><lastmod>2018-1-26</lastmod></url>',
+      '<url><loc>/bar</loc><lastmod>2018-01-14</lastmod></url>',
       '\n',
       '</urlset>'
     ],

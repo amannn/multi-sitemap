@@ -96,10 +96,11 @@ export default class SitemapProcessor {
     this.sitemapFilenames.push(stream.filename);
   }
 
-  public async addIndex() {
+  public async addIndex({lastModified} = {lastModified: new Date()}) {
     const stream = await this.writer.createStream('index');
     const entries = this.sitemapFilenames.map(filename => ({
-      url: `${this.publicDirectory}/${filename}`
+      url: `${this.publicDirectory}/${filename}`,
+      lastModified
     }));
     await stream.add(this.mapEntriesToFullUrls(entries));
     await stream.end();

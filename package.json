@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "tslint src/**/*.ts",
     "prepublish": "yarn run build",
-    "build": "yarn run test && rm -rf ./dist && tsc",
+    "build": "yarn lint && yarn test && rm -rf ./dist && tsc",
     "test": "jest"
   },
   "jest": {

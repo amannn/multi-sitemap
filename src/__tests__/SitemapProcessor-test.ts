@@ -3,6 +3,7 @@ import SitemapReaderMock from './mocks/SitemapReaderMock';
 import SitemapWriterMock from './mocks/SitemapWriterMock';
 
 it('can handle a mix of static and dynamic sitemaps', async () => {
+  const now = new Date();
   const writer = new SitemapWriterMock();
   const processor = new SitemapProcessor({
     publicHost: 'https://domain.tld',
@@ -25,17 +26,32 @@ it('can handle a mix of static and dynamic sitemaps', async () => {
   expect(addDynamicResult).toBeInstanceOf(Promise);
   await addDynamicResult;
 
-  const addIndexResult = processor.addIndex();
+  const addIndexResult = processor.addIndex({lastModified: now});
   expect(addIndexResult).toBeInstanceOf(Promise);
   await addIndexResult;
 
   expect(writer.streams).toEqual({
     index: [
-      {url: 'https://domain.tld/sitemap/pages.xml'},
-      {url: 'https://domain.tld/sitemap/products-1.xml'},
-      {url: 'https://domain.tld/sitemap/products-2.xml'},
-      {url: 'https://domain.tld/sitemap/products-3.xml'},
-      {url: 'https://domain.tld/sitemap/products-4.xml'}
+      {
+        url: 'https://domain.tld/sitemap/pages.xml',
+        lastModified: now
+      },
+      {
+        url: 'https://domain.tld/sitemap/products-1.xml',
+        lastModified: now
+      },
+      {
+        url: 'https://domain.tld/sitemap/products-2.xml',
+        lastModified: now
+      },
+      {
+        url: 'https://domain.tld/sitemap/products-3.xml',
+        lastModified: now
+      },
+      {
+        url: 'https://domain.tld/sitemap/products-4.xml',
+        lastModified: now
+      }
     ],
     pages: ['https://domain.tld/', 'https://domain.tld/about'],
     'products-1': [
