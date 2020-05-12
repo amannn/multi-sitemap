@@ -4,7 +4,7 @@ export interface ISitemapReader {
 }
 
 export interface ISitemapWriter {
-  createStream(name: string): Promise<ISitemapWriterStream>;
+  createStream(name: string, isIndex?: boolean): Promise<ISitemapWriterStream>;
   [others: string]: any;
 }
 

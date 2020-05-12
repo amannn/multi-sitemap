@@ -97,7 +97,7 @@ export default class SitemapProcessor {
   }
 
   public async addIndex({lastModified} = {lastModified: new Date()}) {
-    const stream = await this.writer.createStream('index');
+    const stream = await this.writer.createStream('index', true);
     const entries = this.sitemapFilenames.map(filename => ({
       url: `${this.publicDirectory}/${filename}`,
       lastModified

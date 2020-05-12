@@ -13,7 +13,10 @@ function formatLastModified(date = new Date()) {
 }
 
 export default class SitemapWriterXml extends SitemapWriterFile {
-  public async createStream(name: string): Promise<ISitemapWriterStream> {
+  public async createStream(
+    name: string,
+    isIndex: boolean = false
+  ): Promise<ISitemapWriterStream> {
     const filename = name + '.xml';
     const sitemapPath = path.join(this.directory, filename);
     this.fileStreamWriter.open(sitemapPath);
@@ -21,7 +24,9 @@ export default class SitemapWriterXml extends SitemapWriterFile {
     await this.fileStreamWriter.write('<?xml version="1.0" encoding="UTF-8"?>');
     await this.fileStreamWriter.write('\n');
     await this.fileStreamWriter.write(
-      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+      isIndex
+        ? '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        : '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
     );
     await this.fileStreamWriter.write('\n');
 
@@ -36,14 +41,14 @@ export default class SitemapWriterXml extends SitemapWriterFile {
 
           await this.fileStreamWriter.write(
             [
-              '<url>',
+              isIndex ? '<sitemap>' : '<url>',
               `<loc>${entry.url}</loc>`,
               entry.lastModified &&
                 `<lastmod>${formatLastModified(entry.lastModified)}</lastmod>`,
               entry.changeFrequency &&
                 `<changefreq>${entry.changeFrequency}</changefreq>`,
               entry.priority && `<changefreq>${entry.priority}</changefreq>`,
-              '</url>'
+              isIndex ? '</sitemap>' : '</url>'
             ]
               .filter(Boolean)
               .join('')
@@ -54,7 +59,9 @@ export default class SitemapWriterXml extends SitemapWriterFile {
       },
 
       end: async () => {
-        await this.fileStreamWriter.write('</urlset>');
+        await this.fileStreamWriter.write(
+          isIndex ? '</sitemapindex>' : '</urlset>'
+        );
         await this.fileStreamWriter.end();
       }
     };

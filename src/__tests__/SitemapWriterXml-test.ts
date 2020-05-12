@@ -51,3 +51,31 @@ it('builds a valid XML file', async () => {
     ]
   });
 });
+
+it('supports special index syntax', async () => {
+  const fileStreamWriter = new FileStreamWriterMock();
+  const writer = new SitemapWriterXml({
+    directory: './tmp',
+    fileStreamWriter
+  });
+  const stream = await writer.createStream('/first', true);
+  await stream.add(['/', '/foo']);
+  await stream.add([{url: '/bar', lastModified: new Date(2018, 0, 14)}]);
+  await stream.end();
+
+  expect(fileStreamWriter.chunksByName).toEqual({
+    './tmp/first.xml': [
+      '<?xml version="1.0" encoding="UTF-8"?>',
+      '\n',
+      '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
+      '\n',
+      '<sitemap><loc>/</loc></sitemap>',
+      '\n',
+      '<sitemap><loc>/foo</loc></sitemap>',
+      '\n',
+      '<sitemap><loc>/bar</loc><lastmod>2018-01-14</lastmod></sitemap>',
+      '\n',
+      '</sitemapindex>'
+    ]
+  });
+});
