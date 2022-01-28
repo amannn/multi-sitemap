@@ -47,7 +47,7 @@ export default class SitemapWriterXml extends SitemapWriterFile {
                 `<lastmod>${formatLastModified(entry.lastModified)}</lastmod>`,
               entry.changeFrequency &&
                 `<changefreq>${entry.changeFrequency}</changefreq>`,
-              entry.priority && `<changefreq>${entry.priority}</changefreq>`,
+              entry.priority && `<priority>${entry.priority}</priority>`,
               isIndex ? '</sitemap>' : '</url>'
             ]
               .filter(Boolean)
