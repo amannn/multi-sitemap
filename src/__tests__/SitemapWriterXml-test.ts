@@ -61,6 +61,8 @@ it('supports special index syntax', async () => {
   const stream = await writer.createStream('/first', true);
   await stream.add(['/', '/foo']);
   await stream.add([{url: '/bar', lastModified: new Date(2018, 0, 14)}]);
+  await stream.add([{url: '/baz', priority: 1}]);
+  await stream.add([{url: '/bag', changeFrequency: "daily"}]);
   await stream.end();
 
   expect(fileStreamWriter.chunksByName).toEqual({
@@ -74,6 +76,10 @@ it('supports special index syntax', async () => {
       '<sitemap><loc>/foo</loc></sitemap>',
       '\n',
       '<sitemap><loc>/bar</loc><lastmod>2018-01-14</lastmod></sitemap>',
+      '\n',
+      '<sitemap><loc>/baz</loc><priority>1</priority></sitemap>',
+      '\n',
+      '<sitemap><loc>/bag</loc><changefreq>daily</changefreq></sitemap>',
       '\n',
       '</sitemapindex>'
     ]
