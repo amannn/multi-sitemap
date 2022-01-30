@@ -3,10 +3,13 @@ import SitemapWriterFile from './SitemapWriterFile';
 import {ISitemapWriterStream} from './types';
 
 export default class SitemapWriterTxt extends SitemapWriterFile {
-  public createStream(name: string): Promise<ISitemapWriterStream> {
+  public createStream(name: string, isIndex:boolean = false): Promise<ISitemapWriterStream> {
     const filename = name + '.txt';
     const sitemapPath = path.join(this.directory, filename);
     this.fileStreamWriter.open(sitemapPath);
+    if( isIndex ) {
+      console.log('there is no difference in output regardless  of isIndex');
+    }
 
     const writerStream: ISitemapWriterStream = {
       name,
