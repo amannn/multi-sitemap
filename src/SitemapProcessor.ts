@@ -1,27 +1,27 @@
 import {
   ISitemapReader,
-  ISitemapWriter,
   ISitemapWriterStream,
   SitemapEntryConfig
 } from './types';
+import { IWriterFactory } from './IWriterFactory';
 
 export default class SitemapProcessor {
   private publicHost: string;
   private maxEntriesPerFile: number;
   private publicDirectory: string;
   private sitemapFilenames: string[] = [];
-  private writer: ISitemapWriter;
+  private writerFactory:  IWriterFactory;
 
   constructor({
     publicHost,
     maxEntriesPerFile = 50000,
     publicDirectory,
-    writer
+    writerFactory
   }: {
     publicHost: string;
     maxEntriesPerFile?: number;
     publicDirectory: string;
-    writer: ISitemapWriter;
+    writerFactory: IWriterFactory;
   }) {
     // Normalize `publicHost`
     if (publicHost.endsWith('/')) {
@@ -38,7 +38,7 @@ export default class SitemapProcessor {
     }
     this.publicDirectory = publicDirectory;
 
-    this.writer = writer;
+    this.writerFactory = writerFactory;
   }
 
   public addDynamic({name, reader}: {name: string; reader: ISitemapReader}) {
@@ -68,7 +68,8 @@ export default class SitemapProcessor {
           curFileIndex++;
           curStreamedEntries = 0;
           curStreamName = `${name}-${curFileIndex}`;
-          stream = await this.writer.createStream(curStreamName);
+          const writer = this.writerFactory.newWriter();
+          stream = await writer.createStream(curStreamName, false);
         }
 
         curStreamedEntries += entries.length;
@@ -90,14 +91,16 @@ export default class SitemapProcessor {
     name: string;
     entries: SitemapEntryConfig[];
   }) {
-    const stream = await this.writer.createStream(name);
+    const writer = this.writerFactory.newWriter();
+    const stream = await writer.createStream(name, false);
     await stream.add(this.mapEntriesToFullUrls(entries));
     await stream.end();
     this.sitemapFilenames.push(stream.filename);
   }
 
   public async addIndex({lastModified} = {lastModified: new Date()}) {
-    const stream = await this.writer.createStream('index', true);
+    const writer = this.writerFactory.newWriter();
+    const stream = await writer.createStream('index', true);
     const entries = this.sitemapFilenames.map(filename => ({
       url: `${this.publicDirectory}/${filename}`,
       lastModified

@@ -19,5 +19,5 @@ export default abstract class SitemapWriterFile implements ISitemapWriter {
     mkdirp.sync(directory);
   }
 
-  public abstract createStream(name: string): Promise<ISitemapWriterStream>;
+  public abstract createStream(name: string, isIndex: boolean): Promise<ISitemapWriterStream>;
 }
